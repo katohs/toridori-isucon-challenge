@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Comment, Post, User } from "@prisma/client";
 import { PrismaService } from "./db/prisma.service";
-import { CommentExt, PostExt, ReqSession, SessionUser } from "./types";
+import { PostExt, ReqSession, SessionUser } from "./types";
 
 const UPLOAD_LIMIT = 10 * 1024 * 1024; // 10mb
 
@@ -109,17 +109,12 @@ export class AppService {
     post: Post,
     options: { allComments: boolean },
   ): Promise<PostExt> {
-    const commentCount = await this.prisma.comment.count({
-      where: { post_id: post.id },
-    });
-
     const comments = await this.prisma.comment.findMany({
       where: { post_id: post.id },
       orderBy: { created_at: "desc" },
       take: options.allComments ? undefined : 3,
       include: { user: true },
     });
-
     const postUser = await this.getUser(post.user_id);
     if (postUser == null) {
       throw new Error("ユーザーが見つかりません");
@@ -127,7 +122,7 @@ export class AppService {
 
     return {
       ...post,
-      commentCount,
+      commentCount: comments.length,
       comments,
       user: postUser,
     };
