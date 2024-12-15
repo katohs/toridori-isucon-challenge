@@ -196,12 +196,6 @@ export class AppService {
     return await this.prisma.post.findUnique({ where: { id: postId } });
   }
 
-  async getUserByAccountName(account_name: string): Promise<User | null> {
-    return await this.prisma.user.findFirst({
-      where: { account_name },
-    });
-  }
-
   async getPostsByUser(user: User): Promise<Post[]> {
     return await this.prisma.post.findMany({
       where: { user_id: user.id },

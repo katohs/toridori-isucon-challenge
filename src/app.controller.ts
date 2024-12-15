@@ -136,7 +136,7 @@ export class AppController {
     @Param("accountName") accountName: string,
     @Session() session: ReqSession,
   ): Promise<object> {
-    const user = await this.service.getUserByAccountName(accountName);
+    const user = await this.service.getSessionUser(session);
     if (user == null) {
       throw new NotFoundException("Not Found");
     }
@@ -338,7 +338,7 @@ export class AppController {
       throw new HttpException("invalid CSRF Token", 422);
     }
 
-    const user = await this.service.getUserByAccountName(accountName);
+    const user = await this.service.getSess(accountName);
     if (user == null) {
       throw new HttpException("user not found", 404);
     }
