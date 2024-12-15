@@ -338,7 +338,7 @@ export class AppController {
       throw new HttpException("invalid CSRF Token", 422);
     }
 
-    const user = await this.service.getSess(accountName);
+    const user = await this.service.getSessionUser(session);
     if (user == null) {
       throw new HttpException("user not found", 404);
     }
