@@ -136,17 +136,21 @@ export class AppController {
     @Param("accountName") accountName: string,
     @Session() session: ReqSession,
   ): Promise<object> {
-    const me = await this.service.getSessionUser(session);
     const user = await this.service.getUserByAccountName(accountName);
     if (user == null) {
       throw new NotFoundException("Not Found");
     }
     const posts = await this.service.getPostsByUser(user);
-    const postCount = await this.service.getPostCountByUser(user);
     const postExts = await this.service.makePostExts(posts);
-    const filteredPosts = this.service.filterPosts(postExts, POSTS_PER_PAGE);
-    const commentCount = await this.service.getCommentCountByUser(user);
-    const commentedCount = await this.service.getCommentedCountByUser(user);
+    const [me, filteredPosts, commentCount, commentedCount, postCount] =
+      await Promise.all([
+        this.service.getSessionUser(session),
+        this.service.filterPosts(postExts, POSTS_PER_PAGE),
+        this.service.getCommentCountByUser(user),
+        this.service.getCommentedCountByUser(user),
+        this.service.getPostCountByUser(user),
+      ]);
+
     return {
       me,
       user,
