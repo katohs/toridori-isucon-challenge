@@ -1,5 +1,5 @@
 DB_PORT ?= 33306
-DB_HOST ?= 127.0.0.1
+DB_HOST ?= host.docker.internal
 DB_USER ?= user
 DB_PASSWORD ?= password
 

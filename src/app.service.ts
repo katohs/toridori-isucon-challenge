@@ -170,17 +170,13 @@ export class AppService {
     return posts.filter((post) => !post.user.del_flg).slice(0, postPerPage);
   }
 
-  async getPosts(userId?: number, before?: Date): Promise<Post[]> {
-    if (!userId) {
-      return [];
-    }
+  async getPosts(before?: Date): Promise<Post[]> {
     let cursor = 0;
     const posts = [];
     let hasMorePosts = true;
     while (hasMorePosts) {
       const batch = await this.prisma.post.findMany({
         where: {
-          user_id: userId,
           created_at: before != null ? { lte: before } : undefined,
         },
         // workaround for https://github.com/prisma/prisma/issues/13864
