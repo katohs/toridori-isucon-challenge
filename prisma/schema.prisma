@@ -38,6 +38,7 @@ model Post {
   Comment Comment[]
 
   @@index([user_id], name: "user_id")
+  @@index([created_at], name: "created_at")
   @@map("posts")
 }
 
