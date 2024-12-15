@@ -51,5 +51,6 @@ model Comment {
   post Post @relation(fields: [post_id], references: [id])
   user User @relation(fields: [user_id], references: [id])
 
+  @@index([post_id], name: "post_id")
   @@map("comments")
 }
